@@ -1,0 +1,5 @@
+= Chronicle Coder
+Peter Lawrey
+
+Chronicle Coder support encoding and decoding numbers and byte data into readable Strings of tokens or words.
+
