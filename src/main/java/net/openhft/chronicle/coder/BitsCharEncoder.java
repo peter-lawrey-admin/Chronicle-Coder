@@ -24,11 +24,6 @@ public class BitsCharEncoder extends AbstractCharEncoder {
     }
 
     @Override
-    public byte[] parseBytes(CharSequence cs) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void appendLong(StringBuilder sb, long value) {
         int start = sb.length();
         int base = symbols.length;
@@ -39,10 +34,5 @@ public class BitsCharEncoder extends AbstractCharEncoder {
             value = val2;
         } while (value > 0);
         reverse(sb, start);
-    }
-
-    @Override
-    public void appendBytes(StringBuilder sb, byte[] bytes) {
-        throw new UnsupportedOperationException();
     }
 }

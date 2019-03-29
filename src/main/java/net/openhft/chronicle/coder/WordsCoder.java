@@ -1,19 +1,17 @@
 package net.openhft.chronicle.coder;
 
-import java.math.BigInteger;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import static net.openhft.chronicle.coder.AbstractCharEncoder.sign;
-import static net.openhft.chronicle.coder.CharEncoder.TWO_2_64;
 
 public class WordsCoder implements Coder {
     private final String[] symbols;
     private final String sep;
     private final Pattern sepPattern;
     private final Map<String, Integer> symbolMap = new LinkedHashMap<>();
-    private final BigInteger base;
+    private final int base;
     private final int base2;
 
     public WordsCoder(String[] symbols, String sep, String sepRegex) {
@@ -25,7 +23,7 @@ public class WordsCoder implements Coder {
             assert last == null : "Duplicate symbol '" + symbols[i] + "'";
         }
         sepPattern = Pattern.compile(sepRegex);
-        this.base = BigInteger.valueOf(symbols.length);
+        this.base = symbols.length;
         base2 = ((int) Math.sqrt(symbols.length)) & ~1;
     }
 
@@ -63,18 +61,17 @@ public class WordsCoder implements Coder {
     }
 
     @Override
-    public byte[] parseBytes(CharSequence cs) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void appendLong(StringBuilder sb, long value) {
         String sep = "";
         if (value < 0) {
-            BigInteger bi = TWO_2_64.add(BigInteger.valueOf(value));
-            BigInteger[] divMod = bi.divideAndRemainder(base);
-            value = divMod[0].longValue();
-            sb.append(symbols[divMod[1].intValueExact()]);
+            long v1 = value >>> 32;
+            long d1 = v1 / base;
+            long m1 = v1 % base;
+            long v0 = (m1 << 32) + (value & 0xFFFF_FFFFL);
+            long d0 = v0 / base;
+            long m0 = v0 % base;
+            value = (d1 << 32) + d0;
+            sb.append(symbols[(int) m0]);
             sep = this.sep;
         }
         int base = symbols.length;
@@ -85,11 +82,6 @@ public class WordsCoder implements Coder {
             value = val2;
             sep = this.sep;
         } while (value > 0);
-    }
-
-    @Override
-    public void appendBytes(StringBuilder sb, byte[] bytes) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -127,7 +119,6 @@ public class WordsCoder implements Coder {
         }
 
     }
-
 
     @Override
     public LatLon parseNormalisedLatLon(CharSequence cs, int offset, int length) {

@@ -11,19 +11,19 @@ public class WordsEncoderTest {
 
     @Test
     public void parseLatLon() throws IOException {
-        for (int size : new int[]{16, 36, /*short*/1024, /*medium*/1936}) {
+        for (int size : new int[]{16, 36, /*short*/1024, /*medium*/1936, 4096}) {
             System.out.println("size: " + size);
             Coder coder = WordsCoderBuilder.fromFile("common-words.txt", size).build();
-            for (int x = -90; x <= 90; x += 10) {
-                for (int y = -180; y <= 180; y += 10) {
+            for (int x = -90; x <= 90; x += 15) {
+                for (int y = -180; y <= 180; y += 15) {
                     StringBuilder sb = new StringBuilder();
-                    coder.appendLatLon(sb, x, y, 1e-4);
-                    System.out.println("x: " + x + ", y: " + y + " " + sb);
+                    coder.appendLatLon(sb, x, y, 2e-3);
+//                    System.out.println("x: " + x + ", y: " + y + " " + sb);
                     Coder.LatLon latLon = coder.parseLatLon(sb);
-                    assertEquals(x, latLon.latitude, 0.5e-4);
-                    assertEquals(y, latLon.longitude, 0.5e-4);
-                    assertTrue(latLon.precision >= 1e-4 / size);
-                    assertTrue(latLon.precision <= 1e-4);
+                    assertEquals(x, latLon.latitude, 1e-3);
+                    assertEquals(y, latLon.longitude, 1e-3);
+                    assertTrue(latLon.precision >= 2e-3 / size);
+                    assertTrue(latLon.precision <= 2e-3);
                 }
             }
         }

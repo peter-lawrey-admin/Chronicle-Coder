@@ -1,15 +1,12 @@
 package net.openhft.chronicle.coder;
 
-import java.math.BigInteger;
-
 public class CharEncoder extends AbstractCharEncoder {
-    static final BigInteger TWO_2_64 = BigInteger.valueOf(1).shiftLeft(64);
-    private final BigInteger base;
+    private final int base;
     private final boolean signed;
 
     public CharEncoder(char[] symbols, byte[] encoding, int min, boolean signed) {
         super(symbols, encoding, min);
-        this.base = BigInteger.valueOf(symbols.length);
+        this.base = symbols.length;
         this.signed = signed;
     }
 
@@ -40,11 +37,6 @@ public class CharEncoder extends AbstractCharEncoder {
     }
 
     @Override
-    public byte[] parseBytes(CharSequence cs) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void appendLong(StringBuilder sb, long value) {
         if (signed && value < 0) {
             sb.append('-');
@@ -52,10 +44,14 @@ public class CharEncoder extends AbstractCharEncoder {
         }
         int start = sb.length();
         if (value < 0) {
-            BigInteger bi = TWO_2_64.add(BigInteger.valueOf(value));
-            BigInteger[] divMod = bi.divideAndRemainder(base);
-            value = divMod[0].longValue();
-            sb.append(symbols[divMod[1].intValueExact()]);
+            long v1 = value >>> 32;
+            long d1 = v1 / base;
+            long m1 = v1 % base;
+            long v0 = (m1 << 32) + (value & 0xFFFF_FFFFL);
+            long d0 = v0 / base;
+            long m0 = v0 % base;
+            value = (d1 << 32) + d0;
+            sb.append(symbols[(int) m0]);
         }
         int base = symbols.length;
         do {
@@ -65,11 +61,6 @@ public class CharEncoder extends AbstractCharEncoder {
             value = val2;
         } while (value > 0);
         reverse(sb, start);
-    }
-
-    @Override
-    public void appendBytes(StringBuilder sb, byte[] bytes) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
