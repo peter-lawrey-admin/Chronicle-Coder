@@ -10,11 +10,11 @@ public class CharEncoderTest {
     @Test
     public void parseLatLon() {
         Coder coder = new CharCoderBuilder("0123456789ABCDEF").build();
-        for (int x = -89; x <= 90; x++)
-            for (int y = -179; y <= 180; y++) {
+        for (int x = -90; x <= 90; x++)
+            for (int y = -180; y <= 180; y++) {
                 StringBuilder sb = new StringBuilder();
                 coder.appendLatLon(sb, x, y, 1e-4);
-                System.out.println("x: " + x + ", y: " + y + " " + sb);
+//                System.out.println("x: " + x + ", y: " + y + " " + sb);
                 Coder.LatLon latLon = coder.parseLatLon(sb);
                 assertEquals(x, latLon.latitude, 0.5e-4);
                 assertEquals(y, latLon.longitude, 0.5e-4);

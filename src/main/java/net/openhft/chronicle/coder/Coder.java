@@ -2,6 +2,8 @@ package net.openhft.chronicle.coder;
 
 import sun.misc.Unsafe;
 
+import java.util.Objects;
+
 import static net.openhft.chronicle.coder.impl.UnsafeUtil.UNSAFE;
 
 public interface Coder {
@@ -10,6 +12,14 @@ public interface Coder {
     }
 
     long parseLong(CharSequence cs, int offset, int length);
+
+    default int parseInt(CharSequence cs) {
+        return parseInt(cs, 0, cs.length());
+    }
+
+    default int parseInt(CharSequence cs, int offset, int length) {
+        return Math.toIntExact(parseLong(cs, offset, length));
+    }
 
     byte[] parseBytes(CharSequence cs);
 
@@ -33,6 +43,10 @@ public interface Coder {
     }
 
     LatLon parseNormalisedLatLon(CharSequence cs, int offset, int length);
+
+    default void appendInt(StringBuilder sb, int value) {
+        appendLong(sb, signed() ? (long) value : (value & 0xFFFFFFFFL));
+    }
 
     void appendLong(StringBuilder sb, long value);
 
@@ -70,6 +84,10 @@ public interface Coder {
      */
     void appendNormalisedLatLon(StringBuilder sb, double latitude, double longitude, double precision);
 
+    default boolean signed() {
+        return false;
+    }
+
     class LatLon {
         public final double latitude;
         public final double longitude;
@@ -79,6 +97,30 @@ public interface Coder {
             this.latitude = latitude;
             this.longitude = longitude;
             this.precision = precision;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            LatLon latLon = (LatLon) o;
+            return Double.compare(latLon.latitude, latitude) == 0 &&
+                    Double.compare(latLon.longitude, longitude) == 0 &&
+                    Double.compare(latLon.precision, precision) == 0;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(latitude, longitude, precision);
+        }
+
+        @Override
+        public String toString() {
+            return "LatLon{" +
+                    "latitude=" + latitude +
+                    ", longitude=" + longitude +
+                    ", precision=" + precision +
+                    '}';
         }
     }
 }

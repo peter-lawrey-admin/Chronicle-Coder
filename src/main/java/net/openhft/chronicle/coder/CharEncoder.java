@@ -3,7 +3,7 @@ package net.openhft.chronicle.coder;
 import java.math.BigInteger;
 
 public class CharEncoder extends AbstractCharEncoder {
-    private static final BigInteger TWO_2_64 = BigInteger.valueOf(1).shiftLeft(64);
+    static final BigInteger TWO_2_64 = BigInteger.valueOf(1).shiftLeft(64);
     private final BigInteger base;
     private final boolean signed;
 
@@ -72,4 +72,8 @@ public class CharEncoder extends AbstractCharEncoder {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public boolean signed() {
+        return signed;
+    }
 }
