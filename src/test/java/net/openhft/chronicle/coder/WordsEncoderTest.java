@@ -8,6 +8,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class WordsEncoderTest {
+    @Test
+    public void london() throws IOException {
+        Coder coder = WordsCoderBuilder.fromFile("common-words.txt", 1936).build();
+        double precision = 1e-4;
+        System.out.println(coder.asStringForLatLon(51.5074, -0.1278, precision));
+        System.out.println(coder.asStringForLatLon(48.8566, 2.3522, precision));
+        System.out.println(coder.asStringForLatLon(40.7128, -74.0060, precision));
+        System.out.println(coder.asStringForLatLon(-37.8136, 144.9631, precision));
+    }
 
     @Test
     public void parseLatLon() throws IOException {

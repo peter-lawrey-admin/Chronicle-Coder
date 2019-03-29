@@ -66,6 +66,12 @@ public interface Coder {
         return false;
     }
 
+    default String asStringForLatLon(double latitude, double longitude, double precision) {
+        StringBuilder sb = new StringBuilder();
+        appendLatLon(sb, latitude, longitude, precision);
+        return sb.toString();
+    }
+
     class LatLon {
         public final double latitude;
         public final double longitude;
