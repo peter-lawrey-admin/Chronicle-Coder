@@ -21,7 +21,7 @@ public class CharEncoderTest {
     }
 
     @Test
-    public void parseLongHexaddecimal() {
+    public void parseLongHexadecimal() {
         Coder coder = new CharCoderBuilder("0123456789ABCDEF")
                 .addAlias('a', 'A')
                 .addAlias('b', 'B')

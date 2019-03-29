@@ -2,6 +2,8 @@ package net.openhft.chronicle.coder;
 
 import java.math.BigInteger;
 
+import static net.openhft.chronicle.coder.BitsCharEncoder.reverse;
+
 public class CharEncoder implements Coder {
     private static final BigInteger TWO_2_64 = BigInteger.valueOf(1).shiftLeft(64);
     private final char[] symbols;
@@ -73,12 +75,7 @@ public class CharEncoder implements Coder {
             sb.append(symbols[sym2]);
             value = val2;
         } while (value > 0);
-        int end = sb.length() - 1;
-        for (; start < end; start++, end--) {
-            char tmp = sb.charAt(start);
-            sb.setCharAt(start, sb.charAt(end));
-            sb.setCharAt(end, tmp);
-        }
+        reverse(sb, start);
     }
 
     @Override

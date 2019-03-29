@@ -56,6 +56,8 @@ public class CharCoderBuilder {
     }
 
     public Coder build() {
+        if (!signed && Integer.bitCount(symbols.length) == 1)
+            return new BitsCharEncoder(symbols, encoding, min);
         return new CharEncoder(symbols, encoding, min, signed);
     }
 
