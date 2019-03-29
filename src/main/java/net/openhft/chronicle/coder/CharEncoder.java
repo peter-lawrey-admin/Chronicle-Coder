@@ -2,21 +2,14 @@ package net.openhft.chronicle.coder;
 
 import java.math.BigInteger;
 
-import static net.openhft.chronicle.coder.BitsCharEncoder.reverse;
-
-public class CharEncoder implements Coder {
+public class CharEncoder extends AbstractCharEncoder {
     private static final BigInteger TWO_2_64 = BigInteger.valueOf(1).shiftLeft(64);
-    private final char[] symbols;
-    private final byte[] encoding;
     private final BigInteger base;
-    private final int min;
     private final boolean signed;
 
     public CharEncoder(char[] symbols, byte[] encoding, int min, boolean signed) {
-        this.symbols = symbols;
-        this.encoding = encoding;
+        super(symbols, encoding, min);
         this.base = BigInteger.valueOf(symbols.length);
-        this.min = min;
         this.signed = signed;
     }
 
@@ -37,11 +30,7 @@ public class CharEncoder implements Coder {
         long value = 0;
         for (int i = offset; i < offset + length; i++) {
             char ch = cs.charAt(i);
-            byte code = ch < min || ch >= min + encoding.length
-                    ? CharCoderBuilder.UNSET
-                    : encoding[ch - min];
-            if (code == CharCoderBuilder.UNSET)
-                throw new IllegalArgumentException("Unexpected character '" + ch + "'");
+            byte code = encoding(ch);
             if (code == CharCoderBuilder.IGNORED)
                 continue;
             value *= symbols.length;
@@ -82,4 +71,5 @@ public class CharEncoder implements Coder {
     public void appendBytes(StringBuilder sb, byte[] bytes) {
         throw new UnsupportedOperationException();
     }
+
 }

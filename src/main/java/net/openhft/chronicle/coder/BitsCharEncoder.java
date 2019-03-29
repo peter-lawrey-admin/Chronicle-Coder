@@ -1,26 +1,12 @@
 package net.openhft.chronicle.coder;
 
-public class BitsCharEncoder implements Coder {
-    private final char[] symbols;
-    private final byte[] encoding;
+public class BitsCharEncoder extends AbstractCharEncoder {
     private final int base, shift;
-    private final int min;
 
     public BitsCharEncoder(char[] symbols, byte[] encoding, int min) {
-        this.symbols = symbols;
-        this.encoding = encoding;
+        super(symbols, encoding, min);
         this.base = symbols.length;
         this.shift = 31 - Integer.numberOfLeadingZeros(base);
-        this.min = min;
-    }
-
-    static void reverse(StringBuilder sb, int start) {
-        int end = sb.length() - 1;
-        for (; start < end; start++, end--) {
-            char tmp = sb.charAt(start);
-            sb.setCharAt(start, sb.charAt(end));
-            sb.setCharAt(end, tmp);
-        }
     }
 
     @Override
@@ -28,11 +14,7 @@ public class BitsCharEncoder implements Coder {
         long value = 0;
         for (int i = offset; i < offset + length; i++) {
             char ch = cs.charAt(i);
-            byte code = ch < min || ch >= min + encoding.length
-                    ? CharCoderBuilder.UNSET
-                    : encoding[ch - min];
-            if (code == CharCoderBuilder.UNSET)
-                throw new IllegalArgumentException("Unexpected character '" + ch + "'");
+            byte code = encoding(ch);
             if (code == CharCoderBuilder.IGNORED)
                 continue;
             value <<= shift;
