@@ -102,10 +102,10 @@ ffffffffffffffff: hot.fridge.dash.pride.dream.fold
 
 |===
 | words | approx distance
-| 2 | 4 km
-| 3 | 70 m
-| 4 | 1 m
-| 5 | 2 cm
+| 2 | 6 km
+| 3 | 90 m
+| 4 | 1.5 m
+| 5 | 2.5 cm
 |===
 
 NOTE: Each word add more resolution and locations which are close to each other have the same start or similar words.
@@ -126,7 +126,7 @@ System.out.println("melbourne: " + coder.asStringForLatLon(-37.8136, 144.9631, p
 prints
 
 ----
-london: shed.our.rhythm.blow
+london: shed.our.thanks.flame
 paris: ear.looked.resort.towel
 new york: occur.mean.pray.announced
 melbourne: slightly.saturn.dancer.connected
@@ -143,10 +143,10 @@ accuracy using 4 words, but less syllables in total.
 
 |===
 | London as | latitude, longitude | Google maps | location
-| shed.our.rhythm.blow | 51.5074,-0.1278 | https://maps.google.com/maps?q=51.5074,+-0.1278 | Trafalgar Square
-| may.clear.broadway | 51.5077,-0.1284 | https://maps.google.com/maps?q=51.5077,+-0.1284 | Across the road from Trafalgar Square
-| may.clear | 51.5259,-0.1318 | https://maps.google.com/maps?q=51.5259,+-0.1318 | Fitzrovia
-| may | 52.0313,-2.8125 | https://maps.google.com/maps?q=52.0313,+-2.8125 | The Saffrons, Wales
+| shed.our.thanks.flame | 51.5080,-0.1306 | https://maps.google.com/maps?q=51.5080,+-0.1306 | Trafalgar Square
+| shed.our.thanks | 51.5077,-0.1311 | https://maps.google.com/maps?q=51.5077,+-0.1311 | Pall Mall
+| shed.our | 51.5259,-0.1318 | https://maps.google.com/maps?q=51.5259,+-0.1318 | Fitzrovia
+| shed | 52.0313,-2.8125 | https://maps.google.com/maps?q=52.0313,+-2.8125 | The Saffrons, Wales
 |===
 
 
