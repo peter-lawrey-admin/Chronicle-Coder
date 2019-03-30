@@ -63,4 +63,39 @@ public class CharEncoderTest {
         }
         assertEquals(0xf101, coder.parseLong("flol"));
     }
+
+    @Test
+    public void testBase85() {
+        String symbols = "0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz\\\"#$%&'()*+,-./";
+        Coder coder = new CharCoderBuilder(symbols).build();
+        StringBuilder sb = new StringBuilder();
+        for (long l : new long[]{
+                Long.MIN_VALUE, -1234567890123456789L, -Long.MAX_VALUE, Integer.MIN_VALUE, -1,
+                0, 1, Integer.MAX_VALUE, 1234567890123456789L, Long.MAX_VALUE}) {
+            sb.setLength(0);
+            coder.appendLong(sb, l);
+            assertEquals(l, coder.parseLong(sb));
+        }
+    }
+
+    @Test
+    public void testBase64() {
+        final char[] toBase64 = {
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
+        };
+        String symbols = new String(toBase64);
+        Coder coder = new CharCoderBuilder(symbols).build();
+        StringBuilder sb = new StringBuilder();
+        for (long l : new long[]{
+                Long.MIN_VALUE, -1234567890123456789L, -Long.MAX_VALUE, Integer.MIN_VALUE, -1,
+                0, 1, Integer.MAX_VALUE, 1234567890123456789L, Long.MAX_VALUE}) {
+            sb.setLength(0);
+            coder.appendLong(sb, l);
+            assertEquals(l, coder.parseLong(sb));
+        }
+    }
 }
