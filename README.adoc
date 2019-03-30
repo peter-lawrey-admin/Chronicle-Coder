@@ -102,11 +102,11 @@ ffffffffffffffff: hot.fridge.dash.pride.dream.fold
 
 |===
 | words | approx distance
-| 2 | 360 m
-| 3 | 9 m
-| 4 | 19 cm
-| 5 | 4.2 mm
-|====
+| 2 | 15 km
+| 3 | 300 m
+| 4 | 6 m
+| 5 | 10 cm
+|===
 
 NOTE: Each word add more resolution and locations which are close to each other have the same start or similar words.
 
@@ -115,8 +115,8 @@ NOTE: Each word add more resolution and locations which are close to each other 
 .generating words for cities to 9m accuracy.
 [source, Java]
 ----
-Coder coder = WordsCoderBuilder.fromFile("common-words.txt", 1936).build();
-double precision = 5e-3;
+Coder coder = WordsCoderBuilder.fromFile("common-words.txt", 4096).build();
+double precision = 1e-4;
 System.out.println("london: " + coder.asStringForLatLon(51.5074, -0.1278, precision));
 System.out.println("paris: " + coder.asStringForLatLon(48.8566, 2.3522, precision));
 System.out.println("new york: " + coder.asStringForLatLon(40.7128, -74.0060, precision));
@@ -126,29 +126,27 @@ System.out.println("melbourne: " + coder.asStringForLatLon(-37.8136, 144.9631, p
 prints
 
 ----
-london: may.clear.broadway
-paris: by.house.again
-new york: route.out.solved
-melbourne: expose.burner.tube
+london: shed.our.rhythm.blow
+paris: ear.looked.resort.towel
+new york: occur.mean.pray.announced
+melbourne: slightly.saturn.dancer.connected
 ----
 
 === Comparing other location to words strategies
 
-There is a solution which uses a much larger dictionary
-and this gets a better resolution with just 3 words.
-However, the downside is that many of these words are less well known
-and longer to say. Using a smaller dictionary, you can get reasonable resolution
-with shorter, common words with the option of using a forth word for
-high resolution.
+While a much larger dictionary gets a better resolution with just 3 words,
+this has the downside of using longer, less common words.
+Using a smaller dictionary of shorter, common words, you can get a comparable
+accuracy using 4 words, but less syllables in total.
 
 === Comparing the number of words used
 
 |===
 | London as | latitude, longitude | Google maps | location
-| may.clear.broadway.fort | 51.50738,-0.12779 | https://maps.google.com/maps?q=51.50738,+-0.12779 | Trafalgar Square
-| may.clear.broadway | 51.5072,-0.1289 | https://maps.google.com/maps?q=51.5072,+-0.1289 | Across the road from Trafalgar Square
-| may.clear | 51.50,-0.13 | https://maps.google.com/maps?q=51.50,+-0.13 | Westminster
-| may | 53.2,-6.1 | https://maps.google.com/maps?q=53.2,+-6.1 | Ireland, south of Dublin
+| shed.our.rhythm.blow | 51.5074,-0.1278 | https://maps.google.com/maps?q=51.5074,+-0.1278 | Trafalgar Square
+| may.clear.broadway | 51.5077,-0.1284 | https://maps.google.com/maps?q=51.5077,+-0.1284 | Across the road from Trafalgar Square
+| may.clear | 51.5259,-0.1318 | https://maps.google.com/maps?q=51.5259,+-0.1318 | Westminster
+| may | 52.0313,-2.8125 | https://maps.google.com/maps?q=52.0313,+-2.8125 | Ireland, south of Dublin
 |===
 
 

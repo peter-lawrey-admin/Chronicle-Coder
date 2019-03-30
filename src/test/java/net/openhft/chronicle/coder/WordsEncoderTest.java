@@ -10,17 +10,17 @@ import static org.junit.Assert.assertTrue;
 public class WordsEncoderTest {
     @Test
     public void london() throws IOException {
-        Coder coder = WordsCoderBuilder.fromFile("common-words.txt", 1936).build();
+        Coder coder = WordsCoderBuilder.fromFile("common-words.txt", 64 * 64).build();
         double precision = 1e-4;
         System.out.println("london: " + coder.asStringForLatLon(51.5074, -0.1278, precision));
         System.out.println("paris: " + coder.asStringForLatLon(48.8566, 2.3522, precision));
         System.out.println("new york: " + coder.asStringForLatLon(40.7128, -74.0060, precision));
         System.out.println("melbourne: " + coder.asStringForLatLon(-37.8136, 144.9631, precision));
 
-        System.out.println(coder.parseLatLon("may.clear.broadway.fort"));
-        System.out.println(coder.parseLatLon("may.clear.broadway"));
-        System.out.println(coder.parseLatLon("may.clear"));
-        System.out.println(coder.parseLatLon("may"));
+        System.out.println(coder.parseLatLon("shed.our.rhythm.blow"));
+        System.out.println(coder.parseLatLon("shed.our.rhythm"));
+        System.out.println(coder.parseLatLon("shed.our"));
+        System.out.println(coder.parseLatLon("shed"));
     }
 
     @Test
