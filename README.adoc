@@ -102,17 +102,17 @@ ffffffffffffffff: hot.fridge.dash.pride.dream.fold
 
 |===
 | words | approx distance
-| 2 | 15 km
-| 3 | 300 m
-| 4 | 6 m
-| 5 | 10 cm
+| 2 | 4 km
+| 3 | 70 m
+| 4 | 1 m
+| 5 | 2 cm
 |===
 
 NOTE: Each word add more resolution and locations which are close to each other have the same start or similar words.
 
 === Words for well known cities
 
-.generating words for cities to 9m accuracy.
+.generating words for cities to 1m accuracy.
 [source, Java]
 ----
 Coder coder = WordsCoderBuilder.fromFile("common-words.txt", 4096).build();
@@ -145,8 +145,8 @@ accuracy using 4 words, but less syllables in total.
 | London as | latitude, longitude | Google maps | location
 | shed.our.rhythm.blow | 51.5074,-0.1278 | https://maps.google.com/maps?q=51.5074,+-0.1278 | Trafalgar Square
 | may.clear.broadway | 51.5077,-0.1284 | https://maps.google.com/maps?q=51.5077,+-0.1284 | Across the road from Trafalgar Square
-| may.clear | 51.5259,-0.1318 | https://maps.google.com/maps?q=51.5259,+-0.1318 | Westminster
-| may | 52.0313,-2.8125 | https://maps.google.com/maps?q=52.0313,+-2.8125 | Ireland, south of Dublin
+| may.clear | 51.5259,-0.1318 | https://maps.google.com/maps?q=51.5259,+-0.1318 | Fitzrovia
+| may | 52.0313,-2.8125 | https://maps.google.com/maps?q=52.0313,+-2.8125 | The Saffrons, Wales
 |===
 
 
