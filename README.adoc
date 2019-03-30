@@ -3,3 +3,156 @@ Peter Lawrey
 
 Chronicle Coder support encoding and decoding numbers and byte data into readable Strings of tokens or words.
 
+This library is
+
+- < 40 kB in size
+- encoding signed and unsigned 32-bit and 64-bit values as text using arbitrary characters as symbols.
+- encode unsigned 32-bit and 64-bit as short common english words (or any language if you provide a dictionary)
+- encoding of latitude / longitude as short sequences of letters/digits or words.
+
+== Encoding numbers as characters
+
+.plain signed decimal as an example
+[source, Java]
+----
+   // create the coder using a builder
+   Coder coder = new CharCoderBuilder("0123456789").signed(true).build();
+   String text = coder.asString(myNumber);
+   long decoded = coder.parseLong(text);
+----
+
+.unsigned hexadecimal with character aliases as an example
+[source, Java]
+----
+    // create a reused StringBuilder.
+    StringBuilder sb = new StringBuilder();
+
+    // Create the coder with aliases
+    Coder coder = new CharCoderBuilder("0123456789ABCDEF")
+            .addAlias('a', 'A') // treat 'a' the same as 'A'
+            .addAlias('b', 'B')
+            .addAlias('c', 'C')
+            .addAlias('d', 'D')
+            .addAlias('e', 'E')
+            .addAlias('f', 'F')
+            .addAlias('O', '0') // treat '0' as an 'O'
+            .addAlias('o', '0')
+            .addAlias('l', '1') // treat 'l' as an '1'
+            .addAlias('L', '1')
+            .build();
+
+    // use a reusable StringBuilder to reduce garbage
+    sb.setLength(0);
+    coder.appendLong(sb, l);
+    assertEquals(l, coder.parseLong(sb));
+----
+
+.encode latitude/longitude as pairs of symbols
+[source, Java]
+----
+    Coder coder = new CharCoderBuilder("0123456789ABCDEF").build();
+    sb.setLength(0);
+    // append a latitude/longitude in degrees to a precision of 0.0001 nautical miles
+    coder.appendLatLon(sb, lat, lon, 1e-4);
+    Coder.LatLon latLon = coder.parseLatLon(sb);
+----
+
+== Encoding numbers as words
+
+.encode numbers as words
+[source, Java]
+----
+    // create a coder using just the first 2094 words of the dictionary. <1>
+    Coder coder = WordsCoderBuilder.fromFile("common-words.txt", 2094).build();
+    StringBuilder sb = new StringBuilder();
+    for (long l : new long[]{
+            Long.MIN_VALUE, 0xFEDCBA9876543210L, -Long.MAX_VALUE, Integer.MIN_VALUE, -1,
+            0, 1, Integer.MAX_VALUE, 0x0123456789ABCDEFL, Long.MAX_VALUE}) {
+        sb.setLength(0);
+        coder.appendLong(sb, l);
+        assertEquals(l, coder.parseLong(sb));
+        System.out.println(Long.toHexString(l) + ": " + sb);
+    }
+----
+<1> There are 2094 words of one or two syllables in the dictionary included. This will encode any 32-bit number with 3 words and 64-bit number with 6 words
+
+NOTE: Syllables in the dictionary were identified by a simple algorithm and are an estimate.
+
+The strings produced above are
+----
+8000000000000000: chop.brush.beat.deeper.black.bring
+fedcba9876543210: beaver.trim.fully.grill.coach.fluid
+8000000000000001: chrome.brush.beat.deeper.black.bring
+ffffffff80000000: royal.spot.stranger.price.dream.fold
+ffffffffffffffff: hot.fridge.dash.pride.dream.fold
+0: able
+1: act
+7fffffff: price.greatly.gene
+123456789abcdef: award.deeper.script.cheese.off.age
+7fffffffffffffff: choose.brush.beat.deeper.black.bring
+----
+
+.encoding locations as words
+[source, Java]
+----
+    Coder coder = WordsCoderBuilder.fromFile("common-words.txt", 1936).build();
+    coder.appendLatLon(sb, lat, lon, 1e-4);
+    Coder.LatLon latLon = coder.parseLatLon(sb);
+----
+
+|===
+| words | approx distance
+| 2 | 360 m
+| 3 | 9 m
+| 4 | 19 cm
+| 5 | 4.2 mm
+|====
+
+NOTE: Each word add more resolution and locations which are close to each other have the same start or similar words.
+
+=== Words for well known cities
+
+.generating words for cities to 9m accuracy.
+[source, Java]
+----
+Coder coder = WordsCoderBuilder.fromFile("common-words.txt", 1936).build();
+double precision = 5e-3;
+System.out.println("london: " + coder.asStringForLatLon(51.5074, -0.1278, precision));
+System.out.println("paris: " + coder.asStringForLatLon(48.8566, 2.3522, precision));
+System.out.println("new york: " + coder.asStringForLatLon(40.7128, -74.0060, precision));
+System.out.println("melbourne: " + coder.asStringForLatLon(-37.8136, 144.9631, precision));
+----
+
+prints
+
+----
+london: may.clear.broadway
+paris: by.house.again
+new york: route.out.solved
+melbourne: expose.burner.tube
+----
+
+=== Comparing other location to words strategies
+
+There is a solution which uses a much larger dictionary
+and this gets a better resolution with just 3 words.
+However, the downside is that many of these words are less well known
+and longer to say. Using a smaller dictionary, you can get reasonable resolution
+with shorter, common words with the option of using a forth word for
+high resolution.
+
+=== Comparing the number of words used
+
+|===
+| London as | latitude, longitude | Google maps | location
+| may.clear.broadway.fort | 51.50738,-0.12779 | https://maps.google.com/maps?q=51.50738,+-0.12779 | Trafalgar Square
+| may.clear.broadway | 51.5072,-0.1289 | https://maps.google.com/maps?q=51.5072,+-0.1289 | Across the road from Trafalgar Square
+| may.clear | 51.50,-0.13 | https://maps.google.com/maps?q=51.50,+-0.13 | Westminster
+| may | 53.2,-6.1 | https://maps.google.com/maps?q=53.2,+-6.1 | Ireland, south of Dublin
+|===
+
+
+
+
+
+
