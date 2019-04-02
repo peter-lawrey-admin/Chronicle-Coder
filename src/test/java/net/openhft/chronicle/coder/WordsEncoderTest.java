@@ -49,7 +49,7 @@ public class WordsEncoderTest {
         StringBuilder sb = new StringBuilder();
         for (long l : new long[]{
                 Long.MIN_VALUE, 0xFEDCBA9876543210L, -Long.MAX_VALUE, Integer.MIN_VALUE, -1,
-                0, 1, Integer.MAX_VALUE, 0x0123456789ABCDEFL, Long.MAX_VALUE}) {
+                0, 1, Integer.MAX_VALUE, 0x0123456789ABCDEFL, 1234567890123456789L, Long.MAX_VALUE}) {
             sb.setLength(0);
             coder.appendLong(sb, l);
             assertEquals(l, coder.parseLong(sb));

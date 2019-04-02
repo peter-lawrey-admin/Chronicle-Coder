@@ -95,6 +95,7 @@ public class CharEncoderTest {
                 0, 1, Integer.MAX_VALUE, 1234567890123456789L, Long.MAX_VALUE}) {
             sb.setLength(0);
             coder.appendLong(sb, l);
+            System.out.println(l + " " + sb);
             assertEquals(l, coder.parseLong(sb));
         }
     }
