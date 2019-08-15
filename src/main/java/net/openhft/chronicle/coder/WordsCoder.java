@@ -117,7 +117,6 @@ public class WordsCoder implements Coder {
             sb.append(sep).append(symbols[index]);
             precision *= factor;
         }
-
     }
 
     @Override
